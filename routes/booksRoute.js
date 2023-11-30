@@ -3,13 +3,15 @@ import { Book } from '../models/bookModel.js';
 
 const router = express.Router();
 
-// Route for Save a new Book
+
 router.post('/', async (request, response) => {
   try {
     if (
       !request.body.title ||
       !request.body.author ||
-      !request.body.publishYear
+      !request.body.genre ||
+      !request.body.publicationYear ||
+      !request.body.isbn
     ) {
       return response.status(400).send({
         message: 'Send all required fields: title, author, publishYear',
@@ -18,7 +20,10 @@ router.post('/', async (request, response) => {
     const newBook = {
       title: request.body.title,
       author: request.body.author,
-      publishYear: request.body.publishYear,
+      genre: request.body.genre,
+      publicationYear: request.body.publicationYear,
+      isbn: request.body.isbn
+
     };
 
     const book = await Book.create(newBook);
@@ -30,7 +35,7 @@ router.post('/', async (request, response) => {
   }
 });
 
-// Route for Get All Books from database
+
 router.get('/', async (request, response) => {
   try {
     const books = await Book.find({});
@@ -45,7 +50,7 @@ router.get('/', async (request, response) => {
   }
 });
 
-// Route for Get One Book from database by id
+
 router.get('/:id', async (request, response) => {
   try {
     const { id } = request.params;
@@ -59,13 +64,15 @@ router.get('/:id', async (request, response) => {
   }
 });
 
-// Route for Update a Book
+
 router.put('/:id', async (request, response) => {
   try {
     if (
-      !request.body.title ||
-      !request.body.author ||
-      !request.body.publishYear
+        !request.body.title ||
+        !request.body.author ||
+        !request.body.genre ||
+        !request.body.publicationYear ||
+        !request.body.isbn
     ) {
       return response.status(400).send({
         message: 'Send all required fields: title, author, publishYear',
